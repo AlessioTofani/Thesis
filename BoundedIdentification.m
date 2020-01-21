@@ -1,4 +1,4 @@
-function BoundedIdentification(theta_c, H, sigma, gamma, y, regressor, max_order, k)
+function BoundedIdentification(theta_c, H, sigma, gamma, y, regressor, max_segments, k)
 %Function for guaranteed system identification
 %Based on the paper "Bounded Error Identification of Systems With Time-Varying Parameters"
 
@@ -21,6 +21,7 @@ order = ncolumns; %extraction of the order of the zonotope
 Tbest = cell(1,k+2); %instantiation of the matrix containing the T matrixes
 vbest = cell(1,k+2); %instantiation of the matrix containing the v vectors
 Gamma = diag(gamma); %diagonal matrix of the expansion factors
+max_order = max_segments / parameters_number; %calculating the maximum order of the zonotopes
 
 for index = 3:k+2
      T_set = cell(1,order + 1); %list of the matrixes T
@@ -72,8 +73,8 @@ for index = 3:k+2
     order = ncolumns;
 end
 
-Tbest = Tbest(1,4:102); %cut the first empty values
-vbest = vbest(1,4:102); %cut the first empty values
+Tbest = Tbest(1,4:k+2); %cut the first empty values
+vbest = vbest(1,4:k+2); %cut the first empty values
 steps = k - 1; %number of steps for the graphs
 
 %calculations of the limits of the zonotopes at every instant k
