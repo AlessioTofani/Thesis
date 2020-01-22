@@ -11,7 +11,7 @@ sigma = 0.1;
 r = 3; %order of the zonotope
 
 figure; hold on;
-bounds = [-1,1]; %limits to be displayed
+
 plotStrip(c, d, sigma, bounds); %plot the strip
 plot(Z); %plot the zonotope
 ylim([-0.8,0.6]);
