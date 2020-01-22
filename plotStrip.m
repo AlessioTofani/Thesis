@@ -1,24 +1,22 @@
-function plotStrip(c, d, sigma, bounds)
+function plotStrip(c, d, sigma, x)
 %Function that plot a strip
 %Parameters:
-%c
+%c - vector
 %d
-%sigma
+%sigma - interval
+%x -bounds of the plotting
 %the strip is defined as: 
 %S = {x:|c.T * x - d| <= sigma}
 
 %General formula of a straight line:
 %y = mx + q
 
-x = bounds;
-q = sigma;
-for i = 1:size(c)
-    m = c(i);
-    m = abs(m);
-    y=m*x+q;
-    hold on;
-    plot(x,y,'r:');
-    y=m*x - q;
-    plot(x,y,'r:');
-end
+m = - (c(1,:) / c(2,:));
+q = d / c(2,:);
+hold on;
+y = m*x + q + sigma;
+plot(x,y,'r:');
+y = m*x + q - sigma;
+plot(x,y,'r:');
+
 end
