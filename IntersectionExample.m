@@ -20,27 +20,30 @@ v_set = cell(1,r + 1 );
 volumes_list = []; %list of the volumes of the zonotopes
 cc = lines; %color map for the tight strips
 for j = 0:r
-    if j == 0
-        v = p;
-        T = H;
-    else
-        v = p + ((d - c.' * p) / (c.'* H(:,j))) * H(:,j);
-        for i = 1:r
-            if i == j 
-                 Tji = (sigma / (c.' * H(:,j))) * H(:,j);
-            else
-                Tji = H(:,i) - (c.' * H(:,i) / (c.' * H(:,j))) * H(:,j);
-            end
-            T = horzcat(T, Tji);
-        end
-    end
-    T_set{j + 1} = T;
-    v_set{j + 1} = v;
-    intersection = zonotope([p(1,:), T(1,1), T(1,2), T(1,3); p(2,:), T(2,1), T(2,2), T(2,3)]);
-    volume = det(T * T.');
-    volumes_list = horzcat(volumes_list, volume);
-    plot(intersection, [1 2],'color',cc(j+1,:)); %plot the tight strip
-    T = []; %reinitialize T
-end
+         T = []; %initialize T
+         if j > 0 
+             ctHj = abs(c.' * H(:,j));
+         end
+         if (j >= 1 & j <= r) & ctHj ~= 0 
+         v = p + ((d - c.' * p) / (c.' * H(:,j))) * H(:,j);
+             for i = 1:r
+                if i == j 
+                     Tji = (sigma / (c.' * H(:,j))) * H(:,j);
+                else
+                    Tji = H(:,i) - (c.' * H(:,i) / (c.' * H(:,j))) * H(:,j);
+                end
+                T = horzcat(T, Tji);
+             end
+         else
+            v = p;
+            T = H;
+         end
+        T_set{j + 1} = T;
+        v_set{j + 1} = v;
+        intersection = zonotope([p(1,:), T(1,1), T(1,2), T(1,3); p(2,:), T(2,1), T(2,2), T(2,3)]);
+        plot(intersection, [1 2],'color',cc(j+1,:)); %plot the tight strip
+        volume = det(T * T.');
+        volumes_list = horzcat(volumes_list, volume);
+     end
 
 [min_volume, jstar] = min(volumes_list); %get the smallest volume and its corresponding index (j*)
