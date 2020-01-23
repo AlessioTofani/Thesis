@@ -11,10 +11,9 @@ sigma = 0.1;
 r = 3; %order of the zonotope
 
 figure; hold on;
-
+bounds = [-1,1];
 plotStrip(c, d, sigma, bounds); %plot the strip
 plot(Z); %plot the zonotope
-ylim([-0.8,0.6]);
 T = []; %initialize T
 T_set = cell(1,r + 1); %list of the matrixes T
 v_set = cell(1,r + 1 );
