@@ -40,7 +40,7 @@ for j = 0:r
          end
         T_set{j + 1} = T;
         v_set{j + 1} = v;
-        intersection = zonotope([p(1,:), T(1,1), T(1,2), T(1,3); p(2,:), T(2,1), T(2,2), T(2,3)]);
+        intersection = zonotope([v(1,:), T(1,1), T(1,2), T(1,3); v(2,:), T(2,1), T(2,2), T(2,3)]);
         plot(intersection, [1 2],'color',cc(j+1,:)); %plot the tight strip
         volume = det(T * T.');
         volumes_list = horzcat(volumes_list, volume);
