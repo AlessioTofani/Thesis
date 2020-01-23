@@ -31,7 +31,6 @@ for index = 3:k+2
      d = y(index); 
      for j = 0:order
          T = []; %initialize T
-         %ctHj = realmax;
          if j > 0 
              ctHj = abs(c.' * H(:,j));
          end
