@@ -14,9 +14,9 @@ function plotStrip(c, d, sigma, x)
 m = - (c(1,:) / c(2,:));
 q = d / c(2,:);
 hold on;
-y = m*x + q + sigma;
+y = m*x + q + (sigma / c(2,:)); 
 plot(x,y,'r:');
-y = m*x + q - sigma;
+y = m*x + q - (sigma / c(2,:)); 
 plot(x,y,'r:');
 
 end
