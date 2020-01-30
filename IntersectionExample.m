@@ -14,13 +14,12 @@ figure; hold on;
 bounds = [-1,1];
 plotStrip(c, d, sigma, bounds); %plot the strip
 plot(Z); %plot the zonotope
-T = []; %initialize T
 T_set = cell(1,r + 1); %list of the matrixes T
 v_set = cell(1,r + 1 );
 volumes_list = []; %list of the volumes of the zonotopes
 cc = lines; %color map for the tight strips
 for j = 0:r
-         T = []; %initialize T
+         T = []; %initialise T
          if j > 0 
              ctHj = abs(c.' * H(:,j));
          end
@@ -44,6 +43,6 @@ for j = 0:r
         plot(intersection, [1 2],'color',cc(j+1,:)); %plot the tight strip
         volume = det(T * T.');
         volumes_list = horzcat(volumes_list, volume);
-     end
+end
 
 [min_volume, jstar] = min(volumes_list); %get the smallest volume and its corresponding index (j*)
