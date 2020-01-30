@@ -12,10 +12,10 @@ function BoundedIdentification(theta_c, H, sigma, gamma, y, regressor, max_segme
 %max_order - maximum order of the computed zonotopes
 %k - number of iterations
 
-[dimension1, dimension2] = size(theta_c); %get the bnumber of parameters to be estimated
+[dimension1, dimension2] = size(theta_c); %get the number of parameters to be estimated
 parameters_number = dimension1;
 
-p = theta_c; %initialization of the zonotope's center 
+p = theta_c; %initialisation of the zonotope's center 
 [nrows,ncolumns] = size(H); 
 order = ncolumns; %extraction of the order of the zonotope
 Tbest = cell(1,k+2); %instantiation of the matrix containing the T matrixes
@@ -24,35 +24,35 @@ Gamma = diag(gamma); %diagonal matrix of the expansion factors
 max_order = max_segments / parameters_number; %calculating the maximum order of the zonotopes
 
 for index = 3:k+2
-     T_set = cell(1,order + 1); %list of the matrixes T
-     v_set = cell(1,order + 1); %list of vectors v
-     volumes_list = []; %list of the volumes of the zonotopes for finding the minumum
-     c = regressor{index};
-     d = y(index); 
-     for j = 0:order
-         T = []; %initialize T
-         if j > 0 
-             ctHj = abs(c.' * H(:,j));
-         end
-         if (j >= 1 & j <= order) & ctHj ~= 0 
-             v = p + ((d - c.' * p) / (c.' * H(:,j))) * H(:,j);
-             for i = 1:order
+    T_set = cell(1,order + 1); %list of the matrixes T
+    v_set = cell(1,order + 1); %list of vectors v
+    volumes_list = []; %list of the volumes of the zonotopes for finding the minimum
+    c = regressor{index};
+    d = y(index); 
+    for j = 0:order
+        T = []; %initialise T
+        if j > 0 
+            ctHj = abs(c.' * H(:,j));
+        end
+        if (j >= 1 & j <= order) & ctHj ~= 0 
+            v = p + ((d - c.' * p) / (c.' * H(:,j))) * H(:,j);
+            for i = 1:order
                 if i == j 
-                     Tji = (sigma / (c.' * H(:,j))) * H(:,j);
+                    Tji = (sigma / (c.' * H(:,j))) * H(:,j);
                 else
                     Tji = H(:,i) - (c.' * H(:,i) / (c.' * H(:,j))) * H(:,j);
                 end
                 T = horzcat(T, Tji);
-             end
-         else
+            end
+        else
             v = p;
             T = H;
-         end
+        end
         T_set{j + 1} = T;
         v_set{j + 1} = v;
         volume = det(T * T.');
         volumes_list = horzcat(volumes_list, volume);
-     end
+    end
     [min_volume, jstar] = min(volumes_list); %get the smallest volume and its corresponding index (j*)
     T_star = T_set{jstar}; %get the T(j*)
     v_star = v_set{jstar}; %get the v(j*)
@@ -82,7 +82,7 @@ for i = 1:steps
     bounds{i} = sum(abs(Tbest{i}),2);
 end
 
-%visualization of the parameters
+%visualisation of the parameters
 for i = 1:parameters_number
     figure();
     upper = zeros(1,steps);
