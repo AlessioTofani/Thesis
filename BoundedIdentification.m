@@ -29,30 +29,7 @@ for index = 3:k+2
     volumes_list = []; %list of the volumes of the zonotopes for finding the minimum
     c = regressor{index};
     d = y(index); 
-    for j = 0:order
-        T = []; %initialise T
-        if j > 0 
-            ctHj = abs(c.' * H(:,j));
-        end
-        if (j >= 1 & j <= order) & ctHj ~= 0 
-            v = p + ((d - c.' * p) / (c.' * H(:,j))) * H(:,j);
-            for i = 1:order
-                if i == j 
-                    Tji = (sigma / (c.' * H(:,j))) * H(:,j);
-                else
-                    Tji = H(:,i) - (c.' * H(:,i) / (c.' * H(:,j))) * H(:,j);
-                end
-                T = horzcat(T, Tji);
-            end
-        else
-            v = p;
-            T = H;
-        end
-        T_set{j + 1} = T;
-        v_set{j + 1} = v;
-        volume = det(T * T.');
-        volumes_list = horzcat(volumes_list, volume);
-    end
+    [T_set,v_set,volumes_list] = intersection(order,p,d,c,H,sigma); %calling the function for the intersection of a zonotope and a strip
     [min_volume, jstar] = min(volumes_list); %get the smallest volume and its corresponding index (j*)
     T_star = T_set{jstar}; %get the T(j*)
     v_star = v_set{jstar}; %get the v(j*)
