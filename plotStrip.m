@@ -1,8 +1,8 @@
-function plotStrip(c, d, sigma, x)
+function plotStrip(c,d,sigma,x)
 %Function that plot a strip
 %Parameters:
-%c - vector
-%d
+%c - vector c for constructing the strip
+%d - value d for constructing the strip
 %sigma - interval
 %x -bounds of the plotting
 %the strip is defined as: 
