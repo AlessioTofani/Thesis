@@ -63,22 +63,8 @@ while k <= N + 2 %iteration over the number of iterations
         d1 = b1 + delta1_star/2 * norm(phi_u);
         sigma1 = delta1_star/2 * norm(phi_u);
         
-        %intersection of the zonotope and the strip
-        [T_set,v_set,volumes_list] = intersection(order,p,d1,c1,H,sigma1);
-        [min_volume, jstar] = min(volumes_list); %get the smallest volume and its corresponding index (j*)
-        H_new = T_set{jstar};
-        v_new = v_set{jstar};
-        zono_matrix = horzcat(v_new,H_new);
-        Z_new = zonotope(zono_matrix);
-        Zhalf_new = halfspace(Z_new); %creation of the half space representation
-        half_new = Zhalf_new.halfspace; %extracing the values
-        A = half_new.H;
-        b = half_new.K;
-        Abase = vertcat(A,phi_l);
-        bbase = vertcat(b,b2);
-
-        [nrows,ncolumns] = size(H_new);
-        new_order = ncolumns;
+        %intersection of the zonotope and the first strip
+        [T_set_1,v_set_1,volumes_list_1] = intersection(order,p,d1,c1,H,sigma1);
         
         %second strip
         theta2 = fmincon(@objective, x0, Abase, bbase, Aeq, beq, lb, up, @nlcon, options, phi_l, phi_u, b2);
@@ -89,27 +75,26 @@ while k <= N + 2 %iteration over the number of iterations
         d2 = b2 + delta2_star/2 * norm(phi_l);
         sigma2 = delta2_star/2 * norm(phi_l);
         
-        %intersection of the zonotope and the strip
-        [T_set_new,v_set_new,volumes_list_new] = intersection(new_order,v_new,d2,c2,H_new,sigma2);
-        [min_volume, jstar_new] = min(volumes_list_new); %get the smallest volume and its corresponding index (j*)
-        H_fin = T_set_new{jstar_new};
-        v_fin = v_set_new{jstar_new};
-        %zono_matrix = horzcat(v_fin,H_fin);
-        %Z_fin = zonotope(zono_matrix);
-        
+        %intersection of the zonotope and the second strip
+        [T_set_2,v_set_2,volumes_list_2] = intersection(order,p,d2,c2,H,sigma2);
+        T_set =[T_set_1,T_set_2];
+        v_set = [v_set_1,v_set_2];
+        volumes_list = [volumes_list_1,volumes_list_2];
+        [min_volume, jstar] = min(volumes_list); %get the smallest volume and its corresponding index (j*)
+        H_new = T_set{jstar};
+        v_new = v_set{jstar};
         i = i +1;
     end
-    H_fin = horzcat(H_fin,Gamma); %set expansion
-
+    H_new = horzcat(H_new,Gamma); %set expansion
     if order >= max_order %zonotope reduction 
-        zono_matrix = horzcat(v_fin,H_fin);
+        zono_matrix = horzcat(v_new,H_new);
         z = zonotope(zono_matrix);
         z_reduced = reduce(z,'girard',max_order);
-        H_fin = generators(z_reduced);
-        v_fin = center(z_reduced);
+        H_new = generators(z_reduced);
+        v_new = center(z_reduced);
     end
-    H = H_fin;
-    p = v_fin;
+    H = H_new;
+    p = v_new;
     Tbest{k} = H;
     vbest{k} = p;
     [nrows,ncolumns] = size(H);
