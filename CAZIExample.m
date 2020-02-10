@@ -48,4 +48,6 @@ for i = 3:N+2
 end
 
 %function call
+tic %start clock
 CAZI(initial_thetas, H, sigma, gamma, x , max_order, N, e, theta_1, theta_2, m)
+toc %stop clock
