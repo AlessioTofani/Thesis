@@ -2,10 +2,10 @@
 
 %Data of the problem
 N  = 100; %number of iterations
-max_order = 10; %max order for the zonotope
+max_segments = 4; %max number of segments forming the zonotopes
 sigma = 0.03;
 initial_thetas = [0.9;0.8];
-theta_1 = zeros(1, N); %initialisation of theta_1
+theta_1 = zeros(1,N); %initialisation of theta_1
 theta_1(1) = initial_thetas(1,:);
 theta_2 = zeros(1,N); %initialisation of theta_2
 theta_2(1) = initial_thetas(2,:);
@@ -25,7 +25,11 @@ for i = 2:N + 2
     theta_2(i) = theta_2(i-1) + 0.05 - i * 0.001;
 end
 
-%generation of the bounded error (check if it's enough)
+parameters = cell(1,2);
+parameters{1} = theta_1;
+parameters{2} = theta_2;
+
+%generation of the bounded error
 e = zeros(1,N+2);
 for i = 3: N + 2
     e(i) = -1 + (1+1) * rand(1);
@@ -49,5 +53,5 @@ end
 
 %function call
 tic %start clock
-CAZI(initial_thetas, H, sigma, gamma, x , max_order, N, e, theta_1, theta_2, m)
+CAZI(initial_thetas, H, sigma, gamma, x , regressor, max_segments, N, e, parameters, m)
 toc %stop clock
