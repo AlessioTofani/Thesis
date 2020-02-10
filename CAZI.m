@@ -1,4 +1,4 @@
-function CAZI(initial_thetas, H, sigma, gamma, x, max_order, N, e, theta_1, theta_2, m)
+function CAZI(initial_thetas, H, sigma, gamma, x, regressor, max_segments, N, e, parameters, m)
 %Function for guaranteed system identification
 %Based on the paper "Bounded Error Identification of Systems With Time-Varying Parameters"
 
@@ -9,11 +9,10 @@ function CAZI(initial_thetas, H, sigma, gamma, x, max_order, N, e, theta_1, thet
 %gamma - vector of the expansion factors
 %x - vector of the system output
 %regressor - regression vector
-%max_order - maximum order of the computed zonotopes
+%max_segments - maximum number of generators of the computed zonotopes
 %N - number of iterations
 %e - error
-%theta_1
-%theta_2
+%parameters - real values of the parameters of the system
 %m - number of measurements
 
 [dimension1, dimension2] = size(initial_thetas); %get the number of parameters to be estimated
@@ -25,6 +24,7 @@ order = ncolumns; %extraction of the order of the zonotope
 Tbest = cell(1,N+2); %instantiation of the matrix containing the T matrixes
 vbest = cell(1,N+2); %instantiation of the matrix containing the v vectors
 Gamma = diag(gamma); %diagonal matrix of the expansion factors
+max_order = max_segments / parameters_number; %calculating the maximum order of the zonotopes
 
 k = 3;
 while k <= N + 2 %iteration over the number of iterations
@@ -132,10 +132,6 @@ for i = 1:parameters_number
     plot(centers,'g');
     plot(upper,'b');
     plot(lower,'b');
-    if i == 1
-        plot(theta_1,'k');
-    else
-        plot(theta_2, 'k');
-    end
+    plot(parameters{i}, 'k');
     xlabel('k');
 end
