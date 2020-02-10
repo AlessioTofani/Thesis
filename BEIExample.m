@@ -43,4 +43,6 @@ for i = 3:k+2
 end
 
 %function call
+tic %start clock
 BoundedIdentification(theta_c, H, sigma, gamma, y, regressor, max_segments, k);
+toc %stop clock
