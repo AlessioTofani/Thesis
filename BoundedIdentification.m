@@ -76,9 +76,9 @@ for i = 1:parameters_number
     end
     hold on;
     title("θ_" + i);
-    plot(centers,'g');
-    plot(upper,'b');
-    plot(lower,'b');
+    plot(centers,'g', 'LineWidth',1.5);
+    plot(upper,'b','LineWidth',1.5);
+    plot(lower,'b','LineWidth',1.5);
     xlabel('k');
 end
 
