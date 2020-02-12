@@ -15,8 +15,8 @@ m = - (c(1,:) / c(2,:));
 q = d / c(2,:);
 hold on;
 y = m*x + q + (sigma / c(2,:)); 
-plot(x,y,'r:');
+plot(x,y,'r:', 'LineWidth',2);
 y = m*x + q - (sigma / c(2,:)); 
-plot(x,y,'r:');
+plot(x,y,'r:', 'LineWidth',2);
 
 end
