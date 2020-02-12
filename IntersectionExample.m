@@ -11,6 +11,7 @@ sigma = 0.1;
 r = 3; %order of the zonotope
 
 figure; hold on;
+grid on;
 bounds = [-1,1];
 plotStrip(c, d, sigma, bounds); %plot the strip
 cc = lines; %color map for the tight strips
@@ -19,7 +20,7 @@ for i = 1:4
     v = v_set{i};
     T = T_set{i};
     inter = zonotope([v(1,:), T(1,1), T(1,2), T(1,3); v(2,:), T(2,1), T(2,2), T(2,3)]);
-    plot(inter, [1 2],'color',cc(i+1,:)); %plot the tight strip
+    plot(inter, [1 2],'color',cc(i+1,:), 'LineWidth',2); %plot the tight strip
 end
-plot(Z); %plot the zonotope
+plot(Z, [1 2], 'LineWidth',2); %plot the zonotope
 [min_volume, jstar] = min(volumes_list); %get the smallest volume and its corresponding index (j*)
