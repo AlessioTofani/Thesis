@@ -6,8 +6,9 @@ p0 = center(Z); %zonotope center
 H0 = generators(Z); %zonotope generators
 
 %plot the initial zonotope
-plot(Z);
+plot(Z,[1 2],'LineWidth',2);
 hold on;
+set(gca,'FontSize',18);
 
 %first strip
 d1 = -0.1163;
@@ -67,6 +68,6 @@ pz = p0+Lambda*(D-Phi'*p0); %center of the candidate zonotope
 Hz = [(eye(2)-Lambda*Phi')*H0 Lambda*SIG]; %generators of the candidate zonotope
 zono_matrix = horzcat(pz,Hz);
 Z2 = zonotope(zono_matrix);
-plot(Z2,[1 2],'g');
+plot(Z2,[1 2],'g','LineWidth',2);
 ylim([-1.5 0.5])
 grid on;
