@@ -25,6 +25,7 @@ for i = 2:N + 2
     theta_2(i) = theta_2(i-1) + 0.05 - i * 0.001;
 end
 
+%creating an array with the parameters
 parameters = cell(1,2);
 parameters{1} = theta_1;
 parameters{2} = theta_2;
@@ -53,5 +54,5 @@ end
 
 %function call
 tic %start clock
-CAZI(initial_thetas, H, sigma, gamma, x , regressor, max_segments, N, e, parameters, m)
+CAZI(initial_thetas, H, sigma, gamma, x, max_segments, N, e, parameters, m)
 toc %stop clock
