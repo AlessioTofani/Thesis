@@ -1,6 +1,7 @@
-function CAZI(initial_thetas, H, sigma, gamma, x, regressor, max_segments, N, e, parameters, m)
-%Function for guaranteed system identification
-%Based on the paper "Bounded Error Identification of Systems With Time-Varying Parameters"
+function CAZI(initial_thetas, H, sigma, gamma, x, max_segments, N, e, parameters, m)
+%Function perform the CAZI algorithm
+%Based on the paper "Zonotope-based recursive estimation of the feasible solution 
+%set for linear static systems with additive and multiplicative uncertainties"
 
 %Parameters
 %initial_thetas - initial values
@@ -35,7 +36,6 @@ while k <= N + 2 %iteration over the number of iterations
     half = Zhalf.halfspace; %extracing the values
     A = half.H;
     b = half.K;
-    
     while i <= m %iteration over the number of measurements
         b1 = x(k) - e(k);
         b2 = x(k) - e(k);
@@ -47,17 +47,18 @@ while k <= N + 2 %iteration over the number of iterations
         phi_l(2) = -x(k-2) - abs(sigma * x(k-2));
         
         %first strip
-        Abase = vertcat(A,phi_l);
-        bbase = vertcat(b,b2);
-        Aeq = []; %equality constraints
-        beq = []; %equality constraints
-        x0 = [1,1]; %initial guess
-        lb = [0,0]; %lower bounds
-        up = []; %upper bounds
-        options = optimoptions('fmincon','Display','off'); 
-
-        theta1 = fmincon(@objective, x0, Abase, bbase, Aeq, beq, lb, up, @nlcon, options, phi_u, phi_u, b1);
-        delta1_star = objective(theta1,phi_u,phi_u,b1);
+        theta = zeros(length(phi_u),1);
+        [maximum,index] = max(abs(phi_u));
+        theta(index) = b1 / phi_u(index);
+        f=phi_u/norm(phi_u); %objective function
+        Ap=[A;-phi_u;phi_l]; %parameters for the linear programming problem
+        bp=[b;-b1;b2]; %parameters for the linear programming problem
+        [X,fval] = linprog(f,Ap,bp); %calling the linear progragming function
+        delta1=fval-theta'*f';
+        [X,fval] = linprog(-f,Ap,bp); %calling the linear progragming function
+        delta2=fval+theta'*f';
+        delta1_star=max([abs(delta1),abs(delta2)]); %getting the best delta
+        
         %strip variables
         c1 = phi_u.';
         d1 = b1 + delta1_star/2 * norm(phi_u);
@@ -67,9 +68,18 @@ while k <= N + 2 %iteration over the number of iterations
         [T_set_1,v_set_1,volumes_list_1] = intersection(order,p,d1,c1,H,sigma1);
         
         %second strip
-        theta2 = fmincon(@objective, x0, Abase, bbase, Aeq, beq, lb, up, @nlcon, options, phi_l, phi_u, b2);
-        delta2_star = objective(theta2,phi_l,phi_u,b2);
-
+        theta = zeros(length(phi_l),1);
+        [maximum,index] = max(abs(phi_l));
+        theta(index) = b2 / phi_l(index);
+        f=phi_l/norm(phi_l); %objective function
+        Ap=[A;-phi_u;phi_l]; %parameters for the linear programming problem
+        bp=[b;-b1;b2]; %parameters for the linear programming problem
+        [X,fval] = linprog(f,Ap,bp); %calling the linear progragming function
+        delta1=fval-theta'*f';
+        [X,fval] = linprog(-f,Ap,bp); %calling the linear progragming function
+        delta2=fval+theta'*f';
+        delta2_star=max([abs(delta1),abs(delta2)]); %getting the best delta
+        
         %strip variables
         c2 = phi_l.';
         d2 = b2 + delta2_star/2 * norm(phi_l);
@@ -77,8 +87,8 @@ while k <= N + 2 %iteration over the number of iterations
         
         %intersection of the zonotope and the second strip
         [T_set_2,v_set_2,volumes_list_2] = intersection(order,p,d2,c2,H,sigma2);
-        T_set =[T_set_1,T_set_2];
-        v_set = [v_set_1,v_set_2];
+        T_set =[T_set_1,T_set_2]; %merging the 2 T_sets
+        v_set = [v_set_1,v_set_2]; %merging the 2 v_sets
         volumes_list = [volumes_list_1,volumes_list_2];
         [min_volume, jstar] = min(volumes_list); %get the smallest volume and its corresponding index (j*)
         H_new = T_set{jstar};
@@ -102,8 +112,8 @@ while k <= N + 2 %iteration over the number of iterations
     k = k + 1;
 end
 
-Tbest = Tbest(1,4:102); %cut the first empty values
-vbest = vbest(1,4:102); %cut the first empty values
+Tbest = Tbest(1,3:102); %cut the first empty values
+vbest = vbest(1,3:102); %cut the first empty values
 steps = N - 1; %number of steps for the graphs
 
 %calculations of the limits of the zonotopes at every instant k
@@ -129,9 +139,9 @@ for i = 1:parameters_number
     end
     hold on;
     title("θ_" + i);
-    plot(centers,'g');
-    plot(upper,'b');
-    plot(lower,'b');
-    plot(parameters{i}, 'k');
+    plot(centers,'g','LineWidth',1.5);
+    plot(upper,'b', 'LineWidth',1.5);
+    plot(lower,'b', 'LineWidth',1.5);
+    plot(parameters{i}, 'k', 'LineWidth',1.5);
     xlabel('k');
 end
