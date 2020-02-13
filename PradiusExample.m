@@ -1,4 +1,4 @@
-%This example shows an alternative way ob building candiate zonotopes
+%This example shows an alternative way ob building candidate zonotopes
 
 %Initial zonotope
 Z = zonotope([0.1,0.1,0.2,0.3;-0.5,0.3,0.2,0.1]);
@@ -30,7 +30,7 @@ sigma3 = 0.3;
 plotStrip(c3,d3,sigma3,bounds);
 
 %polyhedron
-%S = {thata : |Phi.'*theta - D| <= sig}
+%S = {theta : |Phi.'*theta - D| <= sig}
 Phi = [5,-4,1;1,1,2];
 C = Phi';
 D = [-0.1163;-0.2935;-0.6928];
@@ -41,10 +41,9 @@ beta=0.01;
 epsilon=sig'*sig; 
 n_lmi=9; %dimensions of the LMI matrix
 P=[1 0;0 1]; %user defined matrix P
-Gamma=zeros(2,2); %user defined matrix Gamma
+Gamma=zeros(2,2); %Expansion matrix
 
 %LMI Problem
-cvx_solver Mosek;
 cvx_begin
     variable X(2,3);
     variable tau;
@@ -52,7 +51,6 @@ cvx_begin
     subject to
         (1-beta)*P/epsilon-tau*eye(2) == semidefinite(2);
         tau>=0;
-
     A11 = blkdiag(beta*P,Gamma'*Gamma,SIG'*SIG);
     A12 = [P-C'*X';Gamma'*P-Gamma'*C'*X'; SIG*X'];
     A21 = A12';
@@ -69,5 +67,5 @@ Hz = [(eye(2)-Lambda*Phi')*H0 Lambda*SIG]; %generators of the candidate zonotope
 zono_matrix = horzcat(pz,Hz);
 Z2 = zonotope(zono_matrix);
 plot(Z2,[1 2],'g','LineWidth',2);
-ylim([-1.5 0.5])
+ylim([-1.5 0.5]) %limits for the y axis
 grid on;
