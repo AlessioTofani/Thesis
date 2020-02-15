@@ -71,11 +71,11 @@ for i = 1:parameters_number
         lower(j) = center_temp - current_bound;
     end
     hold on;
-    title("θ_" + i);
     plot(centers,'g', 'LineWidth',1.5);
     plot(upper,'b','LineWidth',1.5);
     plot(lower,'b','LineWidth',1.5);
     xlabel('k');
+    ylabel("θ_" + i)
 end
 
 end
