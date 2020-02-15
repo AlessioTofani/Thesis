@@ -1,4 +1,4 @@
-function BoundedIdentification(theta_c, H, sigma, gamma, y, regressor, max_segments, k)
+function BoundedIdentification(theta_c, H, sigma, gamma, y, regressor, max_segments, N)
 %Function for guaranteed system identification
 %Based on the paper "Bounded Error Identification of Systems With Time-Varying Parameters"
 
@@ -10,7 +10,7 @@ function BoundedIdentification(theta_c, H, sigma, gamma, y, regressor, max_segme
 %y - vector of the system output
 %regressor - regression vector
 %max_order - maximum order of the computed zonotopes
-%k - number of iterations
+%N - number of iterations
 
 [dimension1, dimension2] = size(theta_c); %get the number of parameters to be estimated
 parameters_number = dimension1;
@@ -18,12 +18,12 @@ parameters_number = dimension1;
 p = theta_c; %initialisation of the zonotope's center 
 [nrows,ncolumns] = size(H); 
 order = ncolumns; %extraction of the order of the zonotope
-Tbest = cell(1,k+2); %instantiation of the matrix containing the T matrixes
-vbest = cell(1,k+2); %instantiation of the matrix containing the v vectors
+Tbest = cell(1,N); %instantiation of the matrix containing the T matrixes
+vbest = cell(1,N); %instantiation of the matrix containing the v vectors
 Gamma = diag(gamma); %diagonal matrix of the expansion factors
 max_order = max_segments / parameters_number; %calculating the maximum order of the zonotopes
 
-for index = 3:k+2
+for index = 1:N
     T_set = cell(1,order + 1); %list of the matrixes T
     v_set = cell(1,order + 1); %list of vectors v
     volumes_list = []; %list of the volumes of the zonotopes for finding the minimum
@@ -49,23 +49,19 @@ for index = 3:k+2
     order = ncolumns;
 end
 
-Tbest = Tbest(1,4:k+2); %cut the first empty values
-vbest = vbest(1,4:k+2); %cut the first empty values
-steps = k - 1; %number of steps for the graphs
-
 %calculations of the limits of the zonotopes at every instant k
-bounds = cell(1,steps);
-for i = 1:steps
+bounds = cell(1,N);
+for i = 1:N
     bounds{i} = sum(abs(Tbest{i}),2);
 end
 
 %visualisation of the parameters
 for i = 1:parameters_number
     figure();
-    upper = zeros(1,steps);
-    lower = zeros(1,steps);
-    centers = zeros(1,steps);
-    for j = 1:steps
+    upper = zeros(1,N); %upper_bounds
+    lower = zeros(1,N); %lower_bounds
+    centers = zeros(1,N); %center
+    for j = 1:N
         current_bound = bounds{j};
         current_bound = current_bound(i,:);
         actual_value = vbest{j};
