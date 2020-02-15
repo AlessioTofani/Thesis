@@ -7,8 +7,6 @@ max_segments = 4; %max number of segments forming the zonotopes
 sigma = 0.03;
 initial_thetas = [0.9;0.8];
 gamma = [0.05;0.05]; %expansion vector
-m = 1; %number of measurements
-initial_center = [0.9;0.8]; %initial search space center
 H = [-0.2,0.1;0.1,0.2]; %initial generators
 
 %generation of the time-varying parameter theta1
