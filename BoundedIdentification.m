@@ -71,6 +71,7 @@ for i = 1:parameters_number
         lower(j) = center_temp - current_bound;
     end
     hold on;
+    set(gca,'FontSize',18);
     plot(centers,'g', 'LineWidth',1.5);
     plot(upper,'b','LineWidth',1.5);
     plot(lower,'b','LineWidth',1.5);
