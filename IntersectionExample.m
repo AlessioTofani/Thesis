@@ -12,6 +12,7 @@ r = 3; %order of the zonotope
 
 figure; hold on;
 grid on;
+set(gca,'FontSize',18);
 bounds = [-1,1];
 plotStrip(c, d, sigma, bounds); %plot the strip
 cc = lines; %color map for the tight strips
