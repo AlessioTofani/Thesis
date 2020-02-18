@@ -26,7 +26,7 @@ for i = 1:N
     if (i-1) > 0 
         thetap = theta2(i-1);
     end
-    theta2(i) = thetap + 0.05 - i * 0.0008;
+    theta2(i) = thetap + 0.05 - i * 0.001;
 end
 
 %creating an array with the parameters
