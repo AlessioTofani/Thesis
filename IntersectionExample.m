@@ -23,5 +23,5 @@ for i = 1:4
     inter = zonotope([v(1,:), T(1,1), T(1,2), T(1,3); v(2,:), T(2,1), T(2,2), T(2,3)]);
     plot(inter, [1 2],'color',cc(i+1,:), 'LineWidth',2); %plot the tight strip
 end
-plot(Z, [1 2], 'LineWidth',2); %plot the zonotope
+plot(Z, [1 2], 'LineWidth',2, 'color', 'b'); %plot the zonotope
 [min_volume, jstar] = min(volumes_list); %get the smallest volume and its corresponding index (j*)
