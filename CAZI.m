@@ -6,15 +6,14 @@ function CAZI(initial_thetas, H, gamma, B1, B2, Phi_u, Phi_l, max_segments, N, p
 %Parameters
 %initial_thetas - initial values
 %H - initial matrix of the search zonotope
-%sigma - value of the error
 %gamma - vector of the expansion factors
-%x - vector of the system output
-%regressor - regression vector
+%B1 - y - u;
+%B2 - y - u;
+%Phi_u - upper bounds;
+%Phi_l - lower bounds;
 %max_segments - maximum number of generators of the computed zonotopes
 %N - number of iterations
-%e - error
 %parameters - real values of the parameters of the system
-%m - number of measurements
 
 [dimension1, dimension2] = size(initial_thetas); %get the number of parameters to be estimated
 parameters_number = dimension1; 
@@ -106,10 +105,6 @@ while k <= N %iteration over the number of iterations
     k = k + 1;
 end
 
-%Tbest = Tbest(1,3:N+2); %cut the first empty values
-%vbest = vbest(1,3:N+2); %cut the first empty values
-%steps = size(Tbest,2);
-
 %calculations of the limits of the zonotopes at every instant k
 bounds = cell(1,N);
 for i = 1:N
@@ -140,4 +135,21 @@ for i = 1:parameters_number
     para = para(1,1:N);
     plot(para, 'k', 'LineWidth',1.5);
     xlabel('k');
+end
+
+%alternative way to visualize the paramters with their bounds as zonotopes
+figure();
+cc = lines; %color map for the tight strips
+for j = 1:N
+    if mod(j,25) == 0 || (j == 1)
+        hold on;
+        zono_matrix = horzcat(vbest{j}, Tbest{j});
+        z = zonotope(zono_matrix);
+        plot(z, [1 2],'color',cc(j+1,:), 'LineWidth',1.5);
+        plot(parameters{1}(j), parameters{2}(j),'color',cc(j+1,:), 'Marker', '*', 'MarkerSize', 10);
+    end
+end
+plot(parameters{1}, parameters{2}, 'k', 'LineWidth',1.5);
+
+
 end
