@@ -34,7 +34,9 @@ for index = 1:N
     T_star = T_set{jstar}; %get the T(j*)
     v_star = v_set{jstar}; %get the v(j*)
     T_new = horzcat(T_star,Gamma); %set expansion
-    if order >= max_order %zonotope reduction 
+    [nrows,ncolumns] = size(T_new); 
+    new_order = ncolumns; %extraction of the order of the zonotope
+    if new_order >= max_order %zonotope reduction 
         zono_matrix = horzcat(v_star,T_new);
         z = zonotope(zono_matrix);
         z_reduced = reduce(z,'girard',max_order);
@@ -76,7 +78,7 @@ for i = 1:parameters_number
     plot(upper,'b','LineWidth',1.5);
     plot(lower,'b','LineWidth',1.5);
     xlabel('k');
-    ylabel("θ_" + i)
+    ylabel("θ_" + i);
 end
-
+    
 end
