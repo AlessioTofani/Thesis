@@ -138,18 +138,20 @@ for i = 1:parameters_number
 end
 
 %alternative way to visualize the paramters with their bounds as zonotopes
-figure();
-cc = lines; %color map for the tight strips
-for j = 1:N
-    if mod(j,25) == 0 || (j == 1)
-        hold on;
-        zono_matrix = horzcat(vbest{j}, Tbest{j});
-        z = zonotope(zono_matrix);
-        plot(z, [1 2],'color',cc(j+1,:), 'LineWidth',1.5);
-        plot(parameters{1}(j), parameters{2}(j),'color',cc(j+1,:), 'Marker', '*', 'MarkerSize', 10);
+if time_var == 1
+    figure();
+    cc = lines; %color map for the tight strips
+    for j = 1:N
+        if mod(j,25) == 0 || (j == 1)
+            hold on;
+            zono_matrix = horzcat(vbest{j}, Tbest{j});
+            z = zonotope(zono_matrix);
+            plot(z, [1 2],'color',cc(j+1,:), 'LineWidth',1.5);
+            plot(parameters{1}(j), parameters{2}(j),'color',cc(j+1,:), 'Marker', '*', 'MarkerSize', 10);
+        end
     end
+    plot(parameters{1}, parameters{2}, 'k', 'LineWidth',1.5);
 end
-plot(parameters{1}, parameters{2}, 'k', 'LineWidth',1.5);
 
 
 end
