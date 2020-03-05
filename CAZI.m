@@ -25,8 +25,9 @@ Tbest = cell(1,N); %instantiation of the matrix containing the T matrixes
 vbest = cell(1,N); %instantiation of the matrix containing the v vectors
 Gamma = diag(gamma); %diagonal matrix of the expansion factors
 max_order = max_segments / parameters_number; %calculating the maximum order of the zonotopes
-
+time_var = 1;
 k = 1;
+
 while k <= N %iteration over the number of iterations
     matrix = horzcat(p,H);
     Z = zonotope(matrix);
