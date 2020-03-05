@@ -84,7 +84,7 @@ end
 
 %alternative way to visualize the paramters with their bounds as zonotopes
 if time_var == 1
-    iteration_count = 25; %specify every many iterations to display the zonotope
+    iteration_count = 20; %specify every many iterations to display the zonotope
     for i = 1:parameters_number
         figure();
         cc = lines; %color map for the tight strips
@@ -104,6 +104,8 @@ if time_var == 1
             end
         end
         plot(centers,'g', 'LineWidth',1.5);
+        xlabel('k');
+        ylabel("θ_" + i);
     end
 end
 
