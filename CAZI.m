@@ -128,7 +128,6 @@ for i = 1:parameters_number
         lower(j) = center_temp - current_bound;
     end
     hold on;
-    title("θ_" + i);
     plot(centers,'g','LineWidth',1.5);
     plot(upper,'b', 'LineWidth',1.5);
     plot(lower,'b', 'LineWidth',1.5);
@@ -136,6 +135,7 @@ for i = 1:parameters_number
     para = para(1,1:N);
     plot(para, 'k', 'LineWidth',1.5);
     xlabel('k');
+    ylabel("θ_" + i);
 end
 
 %alternative way to visualize the paramters with their bounds as zonotopes
@@ -152,6 +152,8 @@ if time_var == 1
         end
     end
     plot(parameters{1}, parameters{2}, 'k', 'LineWidth',1.5);
+    xlabel("θ_" + 1);
+    ylabel("θ_" + 2);
 end
 
 
