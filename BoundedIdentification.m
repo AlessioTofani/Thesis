@@ -23,7 +23,8 @@ vbest = cell(1,N); %instantiation of the matrix containing the v vectors
 Gamma = diag(gamma); %diagonal matrix of the expansion factors
 max_order = max_segments / parameters_number; %calculating the maximum order of the zonotopes
 time_var = 0; %specify if use also the alternative visualization
-
+Tbest{1} = H; %initial generators
+vbest{1} = theta_c; %initial center
 for index = 1:N
     T_set = cell(1,order + 1); %list of the matrixes T
     v_set = cell(1,order + 1); %list of vectors v
