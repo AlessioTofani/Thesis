@@ -17,7 +17,7 @@ bounds = [-1,1];
 plotStrip(c, d, sigma, bounds); %plot the strip
 cc = lines; %color map for the tight strips
 [T_set,v_set,volumes_list] = intersection(r,p,d,c,H,sigma);
-for i = 1:4
+for i = 1:r+1
     v = v_set{i};
     T = T_set{i};
     inter = zonotope([v(1,:), T(1,1), T(1,2), T(1,3); v(2,:), T(2,1), T(2,2), T(2,3)]);

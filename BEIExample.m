@@ -3,7 +3,7 @@ clc;
 clear;
 %Data of the problem
 theta_c = [0.9;-0.8;-1;-0.8;0]; %initial parameters vector
-H = 0.2*ones(5); %initial generators
+H = 1*eye(5); %initial generators
 sigma = 0.05; 
 gamma = [0.01,0.01,0.01,0.01,0.05]; %expansion factors
 max_segments = 40; %max number of segments forming the zonotopes
