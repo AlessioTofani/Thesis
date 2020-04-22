@@ -1,4 +1,4 @@
-function CAZI(initial_thetas, H, gamma, B1, B2, Phi_u, Phi_l, max_segments, N, parameters)
+function [vbest, Tbest] = CAZI(initial_thetas, H, gamma, B1, B2, Phi_u, Phi_l, max_segments, N)
 %Function perform the CAZI algorithm
 %Based on the paper "Zonotope-based recursive estimation of the feasible solution 
 %set for linear static systems with additive and multiplicative uncertainties"
@@ -13,7 +13,6 @@ function CAZI(initial_thetas, H, gamma, B1, B2, Phi_u, Phi_l, max_segments, N, p
 %Phi_l - lower bounds;
 %max_segments - maximum number of generators of the computed zonotopes
 %N - number of iterations
-%parameters - real values of the parameters of the system
 
 [dimension1, dimension2] = size(initial_thetas); %get the number of parameters to be estimated
 parameters_number = dimension1; 
@@ -105,56 +104,5 @@ while k <= N %iteration over the number of iterations
     order = ncolumns;
     k = k + 1;
 end
-
-%calculations of the limits of the zonotopes at every instant k
-bounds = cell(1,N);
-for i = 1:N
-    bounds{i} = sum(abs(Tbest{i}),2);
-end
-
-%visualization of the parameters
-for i = 1:parameters_number
-    figure();
-    upper = zeros(1,N);
-    lower = zeros(1,N);
-    centers = zeros(1,N);
-    for j = 1:N
-        current_bound = bounds{j};
-        current_bound = current_bound(i,:);
-        actual_value = vbest{j};
-        center_temp = actual_value(i,:);
-        centers(j) = center_temp;
-        upper(j) = current_bound + center_temp;
-        lower(j) = center_temp - current_bound;
-    end
-    hold on;
-    plot(centers,'g','LineWidth',1.5);
-    plot(upper,'b', 'LineWidth',1.5);
-    plot(lower,'b', 'LineWidth',1.5);
-    para = parameters{i};
-    para = para(1,1:N);
-    plot(para, 'k', 'LineWidth',1.5);
-    xlabel('k');
-    ylabel("θ_" + i);
-end
-
-%alternative way to visualize the paramters with their bounds as zonotopes
-if time_var == 1
-    figure();
-    cc = lines; %color map for the tight strips
-    for j = 1:N
-        if mod(j,25) == 0 || (j == 1)
-            hold on;
-            zono_matrix = horzcat(vbest{j}, Tbest{j});
-            z = zonotope(zono_matrix);
-            plot(z, [1 2],'color',cc(j+1,:), 'LineWidth',1.5);
-            plot(parameters{1}(j), parameters{2}(j),'color',cc(j+1,:), 'Marker', '*', 'MarkerSize', 10);
-        end
-    end
-    plot(parameters{1}, parameters{2}, 'k', 'LineWidth',1.5);
-    xlabel("θ_" + 1);
-    ylabel("θ_" + 2);
-end
-
 
 end
