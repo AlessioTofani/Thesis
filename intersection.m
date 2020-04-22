@@ -1,4 +1,4 @@
-function [T_set,v_set,volumes_list] = intersection(order,p,d,c,H,sigma)
+function [T_set,v_set,volumes_list] = Intersection(order,p,d,c,H,sigma)
 %Function that calculates the intersection between a zonotope and a strip
 %The zonotope is given in the form Z = p + H*B^r where + stands for 
 %Minkowski Sum
@@ -19,16 +19,21 @@ function [T_set,v_set,volumes_list] = intersection(order,p,d,c,H,sigma)
 volumes_list = []; %list of the volumes of the zonotopes
 for j = 0:order
     T = []; %initialise T
+    greaterzero = false;
         if j > 0 
             ctHj = abs(c.' * H(:,j));
+            if ctHj > 1e-05
+                greaterzero = true;
+            end
         end
-        if (j >= 1 & j <= order) & ctHj ~= 0 
+        if (j >= 1 & j <= order) & greaterzero 
             v = p + ((d - c.' * p) / (c.' * H(:,j))) * H(:,j);
             for i = 1:order
                 if i == j 
                     Tji = (sigma / (c.' * H(:,j))) * H(:,j);
                 else
-                    Tji = H(:,i) - (c.' * H(:,i) / (c.' * H(:,j))) * H(:,j);
+                    mtc = (c.' * H(:,i) / (c.' * H(:,j)));
+                    Tji = H(:,i) - mtc * H(:,j);
                 end
                 T = horzcat(T, Tji);
             end
