@@ -36,6 +36,7 @@ for i = 1:parameters_number
     plot(lower,'b', 'LineWidth',1.5);
     xlabel('k');
     ylabel("θ_" + i);
+    set(gca,'FontSize',18);
 end
 
 %alternative way to visualize the parameters with their bounds as zonotopes
@@ -44,23 +45,24 @@ if time_var == 1
     for i = 1:parameters_number
         figure();
         cc = lines; %color map for the tight strips
-        centers = zeros(1,N); %center
+        center = zeros(1,N); %center
         for j = 1:N
-            actual_value = vbest{j};
+            actual_value = centers{j};
             center_temp = actual_value(i,:);
-            centers(j) = center_temp;
+            center(j) = center_temp;
             if mod(j,iteration_count) == 0 || (j == 1) 
                 hold on;
                 v = zeros(parameters_number,1);
                 v(1) = j;
                 v(2) = center_temp(1);
-                zono_matrix = horzcat(v, Tbest{j});
+                zono_matrix = horzcat(v, generators{j});
                 z = zonotope(zono_matrix);
                 plot(z, [1 2],'color',cc(j+1,:), 'LineWidth',1.5);
             end
         end
-        plot(centers,'g', 'LineWidth',1.5);
+        plot(center,'g', 'LineWidth',1.5);
         xlabel('k');
         ylabel("θ_" + i);
+        set(gca,'FontSize',18);
     end
 end
