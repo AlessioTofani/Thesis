@@ -7,22 +7,14 @@ N  = 100; %number of iterations
 max_segments = 40; %max number of segments forming the zonotopes
 sigma = 0.05;
 initial_thetas = [0.9;0.8;1;0.8;0]; %initial parameters vector
-
+H = 1*eye(5);
 gamma = [0.01,0.01,0.01,0.01,0.05]; %expansion factors
 time_var = 0;
-
-H = 1*eye(5);
-
-rng('default');
-rng(101);
 
 %input
 f = zeros(1,N); %instantiation of the input vector 
 f = -5 + (5+5)*rand(1,N); %random bounded input |u| < 5
 f(1) = 0;
-
-rng('default');
-rng(17);
 
 %disturbance
 omega = zeros(1,N); %instantiation of the disturbance vector 
@@ -36,32 +28,10 @@ for i = 1: N
 end
 omega(1) = 0;
 
-rng('default');
-rng(3);
-
 %generation of the bounded error
 e = zeros(1,N);
 for i = 1: N
     e(i) = -0.05 + (0.05+0.05) * rand(1); 
-end
-
-theta1 = zeros(1,N); %initialisation of theta_1
-for i = 1:N
-    thetap = 0.9;
-    if (i-1) > 0 
-        thetap = theta1(i-1);
-    end
-    theta1(i) = thetap + 0.05 - i * 0.0008;
-end
-
-%generation of the time-varying parameter theta2
-theta2 = zeros(1,N); %initialisation of theta_2
-for i = 1:N
-    thetap = 0.8;
-    if (i-1) > 0 
-        thetap = theta2(i-1);
-    end
-    theta2(i) = thetap + 0.05 - i * 0.001;
 end
 
 %calculation of the output vector
@@ -80,7 +50,6 @@ for i = 1:N
         fp1 = f(i-1);
     end
     x(i) = 0.9*xp1 -0.8*xp2 - f(i) -0.8*fp1 + omega(i) + e(i);
-    %x(i) = theta1(i) * xp1 - theta2(i) * xp2 +  e(i); 
 end
 
 B1 = cell(1,N);
