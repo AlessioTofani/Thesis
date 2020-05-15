@@ -7,9 +7,8 @@ H = 1*eye(5); %initial generators
 sigma = 0.05; 
 gamma = [0.01,0.01,0.01,0.01,0.05]; %expansion factors
 max_segments = 40; %max number of segments forming the zonotopes
-time_var = 0;
+alternative_visualization = 0;
 N = 100; %number of iterations
-u = zeros(1,N); %instantiation of the input vector 
 u = -5 + (5+5)*rand(1,N); %random bounded input |u| < 5
 
 %initial conditions
@@ -71,4 +70,4 @@ tic %start clock
 toc %stop clock
 
 %plotting the results
-Plot(centers, generators, length(centers), time_var)
+Plot(centers, generators, length(centers), alternative_visualization)
