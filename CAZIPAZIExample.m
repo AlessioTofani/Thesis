@@ -9,10 +9,10 @@ sigma = 0.05;
 initial_thetas = [0.9;0.8;1;0.8;0]; %initial parameters vector
 H = 1*eye(5);
 gamma = [0.01,0.01,0.01,0.01,0.05]; %expansion factors
-time_var = 0;
+alternative_visualization = 0;
+batch_dimension = 4; %dimension of the batch for PAZI algorithm
 
 %input
-f = zeros(1,N); %instantiation of the input vector 
 f = -5 + (5+5)*rand(1,N); %random bounded input |u| < 5
 f(1) = 0;
 
@@ -37,8 +37,6 @@ end
 %calculation of the output vector
 x = zeros(1,N); %instantiation of the output vector
 for i = 1:N
-    %xp1 = 0; %initial condition
-    %xp2 = 0; %initial condition
     fp1 = 0; %initial condition
     xp1 = 0.1; %initial condition
     xp2 = 0.1; %initial condition
@@ -97,8 +95,8 @@ end
 %function call
 tic %start clock
 %[centers, generators] = CAZI(initial_thetas, H, gamma, B1, B2, Phi_u, Phi_l, max_segments, N)
-[centers,generators] = PAZI(initial_thetas, H, gamma, B1, B2, Phi_u, Phi_l, max_segments, N)
+[centers,generators] = PAZI(initial_thetas, H, gamma, B1, B2, Phi_u, Phi_l, max_segments, N, batch_dimension)
 toc %stop clock
 
 %plotting the results
-Plot(centers, generators, length(centers), time_var)
+Plot(centers, generators, length(centers), alternative_visualization)
