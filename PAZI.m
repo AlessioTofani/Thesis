@@ -1,4 +1,4 @@
-function [vbest,Tbest] = PAZI(initial_thetas, H, gamma, B1, B2, Phi_u, Phi_l, max_segments, N)
+function [vbest,Tbest] = PAZI(initial_thetas, H, gamma, B1, B2, Phi_u, Phi_l, max_segments, N, batch_dimension)
 %Function perform the PAZI algorithm
 %Based on the paper "Zonotope-based recursive estimation of the feasible solution 
 %set for linear static systems with additive and multiplicative uncertainties"
@@ -16,7 +16,6 @@ function [vbest,Tbest] = PAZI(initial_thetas, H, gamma, B1, B2, Phi_u, Phi_l, ma
 
 [dimension1, dimension2] = size(initial_thetas); %get the number of parameters to be estimated
 parameters_number = dimension1; 
-batch_dimension = 4;
 p = initial_thetas; %initialization of the zonotope's center 
 [nrows,ncolumns] = size(H); 
 order = ncolumns; %extraction of the order of the zonotope
@@ -32,7 +31,6 @@ Gamma = diag(gamma); %diagonal matrix of the expansion factors
 max_order = max_segments / parameters_number; %calculating the maximum order of the zonotopes
 vbest{1} = initial_thetas;
 Tbest{1} = H;
-nosol = 0;
 i_plot = 0; %index for plotting the results
 m_index = 0; %index of the batch
 batch_C = [];
@@ -40,8 +38,6 @@ batch_D = [];
 batch_Sigma = [];
 
 for k=1:N %iteration over the number of iterations
-    fprintf('ITERATION %d\n',k);
-    nosol = 0;
     matrix = horzcat(p,H);
     Z = zonotope(matrix);
     Zhalf = halfspace(Z); %creation of the half space representation
@@ -112,11 +108,8 @@ for k=1:N %iteration over the number of iterations
     %Solving the LMI problem
     [Lambda,P] = PRadC_BS_SMA(C, Gamma, SIG);
     
-    if nosol == 0
-         v_new = p+Lambda*(D-PHI'*p); %center of the candidate zonotope    
-         H_new = [(eye(parameters_number)-Lambda*PHI')*H Lambda*SIG]; %generators of the candidate zonotope
-         logsol(k) = 1;
-    end
+    v_new = p+Lambda*(D-PHI'*p); %center of the candidate zonotope    
+    H_new = [(eye(parameters_number)-Lambda*PHI')*H Lambda*SIG]; %generators of the candidate zonotope
 
     H_new = horzcat(H_new,Gamma); %set expansion
     if order >= max_order %zonotope reduction 
