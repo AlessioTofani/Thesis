@@ -1,11 +1,11 @@
-function Plot(centers, generators, N, time_var)
+function Plot(centers, generators, N, alternative_visualization)
 %Function for plotting the results of the parameters identification
 
 %Parameters
 %centers - cell array containing the centers of the zonotopes
 %generators - cell array containing the generators of the zonotopes
 %N - number of iterations
-%time_var - flag for specifing if using also the alternative way to
+%alternative_visualization - flag for specifing if using also the alternative way to
 %visualize the results
 
 bounds = cell(1,N);
@@ -40,7 +40,7 @@ for i = 1:parameters_number
 end
 
 %alternative way to visualize the parameters with their bounds as zonotopes
-if time_var == 1
+if alternative_visualization == 1
     iteration_count = 20; %specify every many iterations to display the zonotope
     for i = 1:parameters_number
         figure();
